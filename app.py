@@ -1,15 +1,31 @@
 from flask import Flask, jsonify, request, render_template
 import sqlite3
 import os  
-
+from flask_cors import CORS
+import time
 
 app = Flask(__name__)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "http://localhost:3000",  # Seu frontend local
+            "https://giveaway-books.vercel.app"  # Seu frontend em produção
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type"]
+    }
+})
+
+@app.before_request
+def before_request():
+    time.sleep(0.1)  # Evita que o Render coloque a API em sleep
 
 # Função para conectar ao banco de dados
 def get_db_connection():
     conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row  # Para acessar colunas por nome
+    conn.row_factory = sqlite3.Row
     return conn
+
 
 # Rota inicial (/)
 @app.route('/')
