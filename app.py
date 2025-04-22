@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 import sqlite3
+import os  
+
 
 app = Flask(__name__)
 
@@ -91,4 +93,6 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()  # Garante que o banco de dados esteja inicializado
-    app.run(debug=True)
+    # Configurações para o Render:
+    port = int(os.environ.get('PORT', 10000))  # Render usa a porta 10000
+    app.run(host='0.0.0.0', port=port)
